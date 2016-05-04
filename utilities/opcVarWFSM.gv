@@ -1,0 +1,24 @@
+digraph OPCVarFSM {
+    graph [ fontname = "Helvetica-Oblique",
+            fontsize = 24,
+            label = "\nOPC variable write state machine\nGSc, 2012-10-08",
+            size = "6,6" ];
+    node [shape=Mrecord width=1.5]; Idle ToWrite WritePending Problem;
+    "%start" [label="", shape=circle, style=filled, fillcolor=black, width=0.25];
+    "Legend" [label = "NData = New data for the variable to be written\lWTrig = Trigger the variable to be written via OPC\lWOK = OPC write proccess was successfull\lWError = OPC write process ends with an error (not successfull)",
+              shape = note, fontsize = 12,  labeljust = l];
+
+    Idle -> ToWrite [ label = "NData\l/storeData;"  labeljust = l];
+    Idle -> Idle [ label = "WTrig;"  labeljust = l];
+    ToWrite -> WritePending [ label = "WTrig"  labeljust = l];
+    ToWrite -> ToWrite [ label = "NData\l/storeData;"  labeljust = l];
+    WritePending -> Idle [ label = "WOK\l[Cash == Empty]\l/UpdateVarValue;" labeljust = l ];
+    WritePending -> ToWrite [ label = "WOK\l[Cash != Empty]\l/UpdateVarValue;" labeljust = l];
+    WritePending -> WritePending [ label = "NData\l/storeToCash;" labeljust = l ];
+    WritePending -> WritePending [ label = "WError\l[count < Max]" labeljust = l ];
+    WritePending -> Problem [ label = "WError\l[count>=MAX]\l/Alarm;" labeljust = "l" ];
+    Problem -> Idle [ label = "Reset\l/init",style = "dashed" labeljust = l ];
+    ToWrite -> Idle [ label = "Reset\l/init",style = "dashed" labeljust = l ];
+    WritePending -> Idle [ label = "Reset\l/init",style = "dashed" labeljust = l ];
+    "%start" -> Idle [label = "/init" labeljust = l ];
+}

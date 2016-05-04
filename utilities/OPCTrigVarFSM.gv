@@ -1,0 +1,25 @@
+digraph OPCTrigVarFSM {
+    graph [ fontname = "Helvetica-Oblique",
+            fontsize = 24,
+            label = "\nOPC trigger variable state machine\nGSc, 2013-04-17",
+            size = "6,6" ];
+    node [shape=Mrecord width=1.5]; Idle ToSet Set ToReset ToResetToSet;
+    "%start" [label="", shape=circle, style=filled, fillcolor=black, width=0.25];
+    "Legend" [label = "TSet = Init to set Trigger\lSOK = The variable was correctly set on OPC level\lTReset = Init to reset Trigger\lROK = The variable was correctly resetted on OPC level\lReset = A manual commanded reset\l",
+              shape = note, fontsize = 12 ];
+
+    Idle -> ToSet [ label = "TSet\n/initSCount", penwidth = 2 ];
+    ToSet -> Set [ label = "SOK", penwidth = 2 ];
+    ToSet -> Idle [ label = "TSet\n[Scount>=MAX]", style = "dashed" ];
+    ToSet -> ToSet [ label = "TSet\n[Scount<MAX]\n/incSCount" ];
+    Set -> ToReset [ label = "TReset\n/initRCount", penwidth=2 ];
+    ToReset -> Idle [ label = "ROK", penwidth=2 ];
+    ToReset -> Set [ label = "TReset\n[Rcount>=MAX]", style = "dashed" ];
+    ToReset -> ToReset [ label = "TReset\n[Rcount<MAX]\n/incRCount;" ];
+    Set -> ToResetToSet [ label = "TSet\n/initRCount", color="blue" ];
+    ToResetToSet -> ToSet [ label = "ROK\n/initSCount", color="blue" ];
+    ToResetToSet -> Set [ label = "TSet\n[Rcount>=MAX]", style = "dashed", color="blue" ];
+    ToResetToSet -> ToResetToSet [ label = "TSet\n[Rcount<MAX]\n/incRCount;" ];
+    Set -> Idle [ label = "Reset", style = "dashed" ];
+    "%start" -> Idle [label = "/init"];
+}

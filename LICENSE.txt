@@ -1,0 +1,14 @@
+LIST Software Copyright and Licensing
+====================================
+Copyright© 2008-2016 LIST (Luxembourg Institute of Science and Technology), all right reserved.
+The original LIST Software source code and all associated documentation are Copyright© 2008-2016 of LIST (Luxembourg Institute of Science and Technology), all right reserved.
+Any modifications or additions to source code or documentation contributed to the LIST Software project from outside of LIST are Copyright© of the contributor, and should be noted as such in the comments section of the modified file(s) and the contributers.txt file.
+
+Licenses:
+This program is a free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; version 3 of the License.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+The LIST Software is based on several external modules that are listed in the requirements.txt with their required version. Those modules come with their own terms and conditions. 
+Please see the files COPYING.txt (for the main license) included with this software for the full text of these licenses.

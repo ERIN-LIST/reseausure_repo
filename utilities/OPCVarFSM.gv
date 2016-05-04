@@ -1,0 +1,22 @@
+digraph OPCVarFSM {
+    graph [ fontname = "Helvetica-Oblique",
+            fontsize = 24,
+            label = "\nOPC variable read state machine\nGSc, 2013-02-22",
+            size = "6,6" ];
+    node [shape=Mrecord width=1.5]; UptoDate FromCach Problem;
+    "%start" [label="", shape=circle, style=filled, fillcolor=black, width=0.25];
+    "Legend" [label = "RG = Read with Good OPC Quality\nRB = Read with \"Bad\" OPC Quality\n  Bad means every thin not Good",
+              shape = note, fontsize = 12];
+
+    UptoDate -> UptoDate [ label = "RG"];
+    UptoDate -> FromCach [ label = "RB/initCount;" ];
+    FromCach -> FromCach [ label = "RB[count<MAX]\n/incCount;" ];
+    FromCach -> UptoDate [ label = "RG" ];
+    FromCach -> UptoDate [ label = "Reset/init",style = "dashed" ];
+    FromCach -> Problem [ label = "RB[count>=MAX]\n/Alarm;initPCount;" ];
+    Problem -> UptoDate [ label = "Reset/init",style = "dashed" ];
+    Problem -> Problem [ label = "RG[count<MAX]\n/incPCount;", color="blue" ];
+    Problem:c -> Problem:sw [ label = "RB/initPCount;", color="blue"];
+    Problem -> UptoDate [ label = "RG[pcount>=MAX]\n/Info;", color="blue" ];
+    "%start" -> UptoDate [label = "/init"];
+}

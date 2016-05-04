@@ -1,0 +1,35 @@
+APScheduler==2.1.2
+configobj==5.0.6
+cvxopt==1.1.7
+cvxpy==0.2.25
+ecos==2.0.2
+
+# Difficulties to install EPANETTOOLS using pip
+EPANETTOOLS==0.4.0.1
+
+futures==3.0.3
+ipython==3.2.1
+matplotlib==1.4.3
+numpy==1.9.2
+pandas==0.16.2
+pyparsing==2.0.3
+pyreadline==2.0
+python-dateutil==2.4.2
+pytz==2015.4
+
+# For windows systems
+pywin32==219
+scipy==0.16.0
+scs==1.1.4
+six==1.9.0
+
+# Difficulties to install statemap using pip
+statemap==0.3
+
+toolz==0.7.2
+tzlocal==1.2
+virtualenv==13.1.0
+wheel==0.24.0
+
+# Used by documentation only
+mock==1.3.0

@@ -1,0 +1,114 @@
+
+// This FSM works for the GPCAlgGlobProc class only and only this
+// class may instantiate it.
+
+%class GPCAlgGlobProc
+%start GPCMap::INIT
+
+%map GPCMap
+%%
+INIT
+Entry { initInit(); }
+{
+    InitDone
+    	[ctxt.isInitDone()]
+        getRTrig
+        { doInitRTrigParam(); }
+    InitDone
+        nil
+        { doInit(); }
+    InitError(msg)
+		GPCisOffline 
+        { doWarning(msg); }
+}
+GPCisOffline
+Entry { doSetGPCOffline(); }
+{
+	Reset
+		INIT
+		{}
+}
+
+getRTrig
+Entry { doRTrigInit(); }
+Exit { doRTrigStop(); }
+{
+    TrigOK(dt)
+        [ctxt.isNotSync()]
+        readOPCVars 
+        { doUpdateRTrigParam(dt); }
+    TrigOK(dt)
+        readOPCVars 
+        { }
+    TrigError(msg)
+        GPCisOffline 
+        { doWarning(msg); }
+}
+
+readOPCVars
+Entry { doReadOPC(); }
+{
+    VarsOK
+        checkSysStates
+        { doUpdateParam(); }
+    VarsError(msg)
+        GPCisOffline
+        {doWarning(msg);}
+}
+
+checkSysStates
+Entry { doCheckSysStates(); }
+{
+    MPCActive
+        runMPC
+        {}
+    MPCImpossible(msg)
+        GPCisOffline
+        {doWarning(msg);}
+    MPCInactif
+        getRTrig
+        {}
+}
+
+runMPC
+Entry { doRunMPC(); }
+{
+    MPCDone
+        [ctxt.isNoOPCWrite()]
+        getRTrig
+        {doLogMPCResults();
+         doResetWriteVars();}
+    MPCDone
+        writeOPCVars
+        {doLogMPCResults();}
+    MPCImpossible(msg)
+        GPCisOffline
+        {doWarning(msg);}
+}
+
+writeOPCVars
+Entry { doWriteOPCInit(); }
+{
+    OPCWrite(msg)
+        [ctxt.isOPCWriteOK()]
+        getRTrig
+        {doWTrigInit();}
+    OPCWrite(msg)
+        [ctxt.isOPCWriteError()]
+        GPCisOffline
+        {doWarning(msg);}
+    OPCWrite(msg)
+    	nil
+        {doWriteOPC();}
+    OPCWriteError(msg)
+        GPCisOffline
+        {doWarning(msg);}
+}
+
+Default
+{
+    Default
+        nil 
+        { logIgnored(); }
+}
+%%
